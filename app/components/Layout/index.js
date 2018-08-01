@@ -1,32 +1,24 @@
-import React from 'react'
-import { Container, Row, Col } from 'reactstrap'
-import PropTypes from 'prop-types'
+import { compose, lifecycle } from 'recompose'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { getSession } from '../../actions/sessionActions'
+import { withRouter } from 'react-router'
+import Layout from './component'
 
-import './index.scss'
+const mapDispatchToProps = dispatch => bindActionCreators({
+  getSession: getSession
+}, dispatch)
 
-// This file can be excluded, and the manifest styled manually if wished
-import 'redux-manifest/dist/styles.css'
-
-const Layout = props => {
-  return (
-    <div className='Layout'>
-      <Container fluid>
-        <Row className='addstack-main'>
-          <Col>
-            {props.children}
-          </Col>
-        </Row>
-      </Container>
-    </div>
-  )
+const lifecycleMethods = {
+  componentWillMount () {
+    this.props.getSession()
+  }
 }
 
-Layout.propTypes = {
-  children: PropTypes.array,
-  runlevel: PropTypes.string,
-  actions: PropTypes.shape({
-    setRunlevel: PropTypes.func.isRequired
-  })
-}
+const enhance = compose(
+  withRouter,
+  connect(null, mapDispatchToProps),
+  lifecycle(lifecycleMethods)
+)
 
-export default Layout
+export default enhance(Layout)

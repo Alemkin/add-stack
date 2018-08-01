@@ -1,23 +1,21 @@
+import '../addfont.font'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import {HashRouter} from 'react-router-dom'
 import {Provider} from 'react-redux'
-import configureStore from './store'
-import startSagas from './sagas'
-import {HashRouter, Route} from 'react-router-dom'
-import Layout from './containers/Layout'
-import routes from './routes'
+import Layout from './components/Layout'
 
-export const store = configureStore()
-startSagas()
+import store from './store'
+import './service'
+import './sagas'
 
-const mapRouteToRouteComponent = r => <Route {...r} key={r.path} />
+import { initTranslator } from './utils/translate'
+initTranslator()
 
 ReactDOM.render(<div>
   <Provider store={store}>
     <HashRouter>
-      <Layout>
-        {routes.map(mapRouteToRouteComponent)}
-      </Layout>
+      <Layout />
     </HashRouter>
   </Provider>
 </div>, document.getElementById('app'))
